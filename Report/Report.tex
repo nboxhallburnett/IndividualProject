@@ -1,0 +1,66 @@
+\documentclass[abstract=on,12pt]{scrreprt}
+
+% Set packages to be used
+\usepackage[hidelinks]{hyperref}	% Adds support for hyperlinks
+\usepackage[british]{babel}			% Set the language to UK English
+\usepackage[a4paper]{geometry}		% Set the paper type
+\usepackage[T1]{fontenc}			% Change the encoding to allow for more character types
+\usepackage{booktabs}				% More professional looking table layouts
+\usepackage{graphicx} 				% For loading graphic files
+\usepackage{multicol}				% Used to set column counts
+\usepackage{ragged2e}				% for '\RaggedRight' macro (allows hyphenation)
+\usepackage{setspace}				% Sets the spacing between lines
+\usepackage{tabularx}				% for 'tabularx' environment and 'X' column type
+\usepackage{titlesec}				% Allows custom formatting for sections
+\usepackage{apalike}				% Format references in APA styling
+\usepackage{gensymb}				% Allow inclusion of special characters, such as degrees
+\usepackage{lmodern} 				% Type1-font for non-english texts and characters
+
+% Set document specific info
+\title{Is Immersion Possible in Non-Euclidean Virtual Environments}
+\subtitle{CHP2524 Report}
+\author{Nathan Boxhall-Burnett}
+\setlength{\columnsep}{1cm}			% Set the spacing between columns
+\onehalfspacing						% Set the spacing between the lines of text
+
+% Set formatting for chapter titles
+\titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter}{1em}{\huge}
+
+% Set formatting for section titles
+\titleformat{\section}[hang]{\large\bfseries}{\thesection}{1em}{\large}
+
+% Set formatting for section titles
+\titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection}{1em}{\normalsize}
+
+% Begin the document
+\begin{document}
+
+	% Title Page
+	\maketitle
+
+	% Abstract
+	\begin{abstract}
+		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, especially in the video game market, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world need to be considered.
+		This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as 'realistic' in VR. As well as this, it also covers how these requirements have been, and can, be adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
+		Gaps in the current literature are outlined, alongside perspective areas for future research.
+	\end{abstract}
+
+	% Table of contents
+	\tableofcontents
+	
+	% Literature Review
+	\input{literature_review}
+
+	% Bibliography
+	\nocite{*}	% Make all entries in the bibliography file appear in the references section, even if not cited directly
+	\begingroup
+		\chapter{References}
+		\renewcommand{\chapter}[2]{}		% Change chapter behaviour to make it not force the bibliography onto the following page
+		\bibliographystyle{apalike}			% Set the bibliography to use APA formatting
+		\bibliography{FinalYearProject}	    % Select the file to use for the bibliography
+	\endgroup
+	
+	\input{appendix}
+
+% End the document
+\end{document}
