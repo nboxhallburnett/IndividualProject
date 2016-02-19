@@ -17,7 +17,7 @@
 \usepackage{lmodern} 				% Type1-font for non-english texts and characters
 
 % Set document specific info
-\title{Is Immersion Possible in Non-Euclidean Virtual Environments}
+\title{Is Immersion Possible in Non-Euclidean Virtual Environments?}
 \subtitle{CHP2524 Report}
 \author{Nathan Boxhall-Burnett}
 \setlength{\columnsep}{1cm}			% Set the spacing between columns
@@ -38,9 +38,12 @@
 	% Title Page
 	\maketitle
 
+	% Remove page numbers
+	\renewcommand\thepage{}
+
 	% Abstract
 	\begin{abstract}
-		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, especially in the video game market, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world need to be considered.
+		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, especially in the video game market, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world, and the effectiveness they have in a users perception, need to be considered.
 		This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as 'realistic' in VR. As well as this, it also covers how these requirements have been, and can, be adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
 		Gaps in the current literature are outlined, alongside perspective areas for future research.
 	\end{abstract}
@@ -48,8 +51,26 @@
 	% Table of contents
 	\tableofcontents
 	
+	% Reset the page count and add page numbering again
+	\newpage
+	\renewcommand\thepage{\arabic{page}}
+	\pagenumbering{arabic}
+
+	% Introduction
+	\input{intro}
+
 	% Literature Review
 	\input{literature_review}
+	% Maybe other background stuff too, who knows
+
+	% Models/Product Design stuff
+	\input{design}
+
+	% Experiment
+	\input{experiment}
+
+	% Evaluation
+	\input{evaluation}
 
 	% Bibliography
 	\nocite{*}	% Make all entries in the bibliography file appear in the references section, even if not cited directly
@@ -59,7 +80,8 @@
 		\bibliographystyle{apalike}			% Set the bibliography to use APA formatting
 		\bibliography{FinalYearProject}	    % Select the file to use for the bibliography
 	\endgroup
-	
+
+	% Appendices
 	\input{appendix}
 
 % End the document
