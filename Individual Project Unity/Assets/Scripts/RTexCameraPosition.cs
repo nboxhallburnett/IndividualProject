@@ -14,8 +14,8 @@ namespace negeo {
         void Start () {
             _playerPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
             cam = GetComponent<Camera>();
-            cam.aspect = transform.parent.lossyScale.x / transform.parent.lossyScale.y;
-            //cam.fieldOfView = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().fieldOfView;
+            //cam.aspect = transform.parent.lossyScale.x / transform.parent.lossyScale.y;
+            cam.fieldOfView = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().fieldOfView;
         }
 
         // Update is called once per frame
@@ -23,8 +23,11 @@ namespace negeo {
             Vector3 offset;
             offset = PointOfView.position - _playerPos.position;
 
-            transform.position = RenderPosition.position - offset;
-            transform.LookAt(RenderPosition);
+            transform.parent.position = RenderPosition.position - offset;
+            //transform.parent.rotation = _playerPos.rotation;
+
+
+            //transform.parent.LookAt(RenderPosition);
             //transform.position = RenderPosition.position;
             // TODO: Calculate equivelant FOV of the render area relative to the players position, and set this to equal that
         }
