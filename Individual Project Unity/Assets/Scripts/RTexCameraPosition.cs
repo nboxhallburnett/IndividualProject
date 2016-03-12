@@ -1,35 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace negeo {
+namespace NEGeo {
     [RequireComponent(typeof(Camera))]
     public class RTexCameraPosition : MonoBehaviour {
 
         public Transform PointOfView;
         public Transform RenderPosition;
-        Transform _playerPos;
+        Transform _player;
+        Vector3 _defaultRot;
+        Vector3 _normalisedDefaultRot;
         Camera cam;
+
+        public static Vector3 rotationOffset = Vector3.zero;
 
         // Use this for initialization
         void Start () {
-            _playerPos = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+            _player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+            _defaultRot = transform.parent.rotation.eulerAngles;
+            _normalisedDefaultRot = new Vector3(0, _defaultRot.y, 0);
             cam = GetComponent<Camera>();
-            //cam.aspect = transform.parent.lossyScale.x / transform.parent.lossyScale.y;
-            cam.fieldOfView = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>().fieldOfView;
+            cam.fieldOfView = _player.GetComponent<Camera>().fieldOfView;
         }
 
         // Update is called once per frame
         void Update () {
             Vector3 offset;
-            offset = PointOfView.position - _playerPos.position;
+            offset = PointOfView.position - _player.position;
 
             transform.parent.position = RenderPosition.position - offset;
-            //transform.parent.rotation = _playerPos.rotation;
-
-
-            //transform.parent.LookAt(RenderPosition);
-            //transform.position = RenderPosition.position;
-            // TODO: Calculate equivelant FOV of the render area relative to the players position, and set this to equal that
+            transform.parent.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
         }
     }
 }

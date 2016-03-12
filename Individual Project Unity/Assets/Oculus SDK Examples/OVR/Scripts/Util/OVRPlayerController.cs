@@ -274,17 +274,21 @@ public class OVRPlayerController : MonoBehaviour {
         prevHatRight = curHatRight;
 
         //Use keys to ratchet rotation
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q)) {
             euler.y -= RotationRatchet;
+            NEGeo.RTexCameraPosition.rotationOffset.y -= RotationRatchet;
+        }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E)) {
             euler.y += RotationRatchet;
+            NEGeo.RTexCameraPosition.rotationOffset.y += RotationRatchet;
+        }
 
         float rotateInfluence = SimulationRate * Time.deltaTime * RotationAmount * RotationScaleMultiplier;
 
 #if !UNITY_ANDROID || UNITY_EDITOR
-        if (!SkipMouseRotation)
-            euler.y += Input.GetAxis("Mouse X") * rotateInfluence * 3.25f;
+        //if (!SkipMouseRotation)
+        //    euler.y += Input.GetAxis("Mouse X") * rotateInfluence * 3.25f;
 #endif
 
         moveInfluence = SimulationRate * Time.deltaTime * Acceleration * 0.1f * MoveScale * MoveScaleMultiplier;
