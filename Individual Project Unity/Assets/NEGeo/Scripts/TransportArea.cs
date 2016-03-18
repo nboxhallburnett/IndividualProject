@@ -5,12 +5,14 @@ namespace NEGeo {
     public class TransportArea : MonoBehaviour {
 
         RTexCameraPosition perspective;
+        CameraRenderPosition persp;
 
         // Use this for initialization
         void Start () {
             perspective = GetComponentInChildren<RTexCameraPosition>();
-            if (perspective == null) {
-                Debug.LogError("No RTexCameraPosition script attached to child.");
+            persp = GetComponentInChildren<CameraRenderPosition>();
+            if (perspective == null && persp == null) {
+                Debug.LogError("No RTexCameraPosition or CameraRenderPosition script attached to child.");
                 return;
             }
 
@@ -26,6 +28,9 @@ namespace NEGeo {
             //       the lines of 'If the player is > half way through this area, move it relative to the linked one
             if (perspective != null && col.tag == "Player") {
                 perspective.positionPlayer(col, transform.position, transform.forward);
+            }
+            if (persp != null && col.tag == "Player") {
+                persp.positionPlayer(col, transform.position, transform.forward);
             }
         }
 

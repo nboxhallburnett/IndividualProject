@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace NEGeo {
     [RequireComponent(typeof(Camera))]
-    public class RTexCameraPosition : MonoBehaviour {
+    public class CameraRenderPosition : MonoBehaviour {
 
-        public GameObject RenderPlane;
+        public bool Render = true;
 
         public Transform PointOfView;
         public Transform RenderPosition;
@@ -24,8 +24,6 @@ namespace NEGeo {
         Quaternion _relativePlayerRot;
         Quaternion _relativePortalRot;
 
-        RenderTexture _rtex;
-
         public static Vector3 rotationOffset = Vector3.zero;
 
         // Use this for initialization
@@ -42,21 +40,21 @@ namespace NEGeo {
                 _bounds[i] = Bounds[i].position;
             }
 
+            additionalDepthRenderers = new GameObject[Helper.renderDepth];
+            for (int i = 0; i < Helper.renderDepth; i++) {
+                additionalDepthRenderers[i] = Instantiate(transform.parent.gameObject);
+                additionalDepthRenderers[i].GetComponentInChildren<CameraRenderPosition>().enabled = false;
+                additionalDepthRenderers[i].GetComponentInChildren<Camera>().depth = -(i + 2);
+                additionalDepthRenderers[i].transform.parent = transform.parent.parent;
+            }
+
             _relativePlayerRot = Quaternion.FromToRotation(RenderPosition.forward, -PointOfView.forward);
             _relativePortalRot = Quaternion.FromToRotation(-PointOfView.forward, RenderPosition.forward);
-
-            cam.aspect = RenderPlane.transform.localScale.x / RenderPlane.transform.localScale.y;
-
-            _rtex = new RenderTexture(1024, 1024, 24);
-
-            RenderPlane.GetComponent<MeshRenderer>().material.mainTexture = _rtex;
-
-            cam.targetTexture = _rtex;
         }
 
         // Update is called once per frame
         void Update () {
-            if (PointOfView.GetComponentInChildren<RTexCameraPosition>().inScreenView()) {
+            if (Render && PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView()) {
                 cam.enabled = true;
                 interruptDisable = true;
 
@@ -64,12 +62,22 @@ namespace NEGeo {
                 offset = PointOfView.position - _player.position;
 
                 transform.parent.position = RenderPosition.position - offset;
-                transform.parent.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180, 0));
+                transform.parent.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot) * _relativePortalRot;
 
+                // If there are additional depth cameras to render, enable and position them
+                for (int i = 0; i < Helper.renderDepth; i++) {
+                    additionalDepthRenderers[i].GetComponentInChildren<Camera>().enabled = true;
+                    additionalDepthRenderers[i].transform.position = RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1));
+                    additionalDepthRenderers[i].transform.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot) * _relativePortalRot;
+                }
             } else {
                 interruptDisable = false;
                 if (cam.enabled) {
                     StartCoroutine(cameraOff());
+
+                    foreach (GameObject camera in additionalDepthRenderers) {
+                        StartCoroutine(cameraOff(camera.GetComponentInChildren<Camera>()));
+                    }
                 }
             }
 
@@ -146,8 +154,7 @@ namespace NEGeo {
         /// </summary>
         /// <returns></returns>
         public bool inScreenView () {
-            return true;
-            //return inScreenView(_bounds, _playerCam);
+            return inScreenView(_bounds, _playerCam);
         }
 
         IEnumerator cameraOff () {

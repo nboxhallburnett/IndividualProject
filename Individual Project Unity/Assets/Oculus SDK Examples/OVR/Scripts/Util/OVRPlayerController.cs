@@ -277,11 +277,13 @@ public class OVRPlayerController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Q)) {
             euler.y -= RotationRatchet;
             NEGeo.RTexCameraPosition.rotationOffset.y -= RotationRatchet;
+            NEGeo.CameraRenderPosition.rotationOffset.y -= RotationRatchet;
         }
 
         if (Input.GetKeyDown(KeyCode.E)) {
             euler.y += RotationRatchet;
             NEGeo.RTexCameraPosition.rotationOffset.y += RotationRatchet;
+            NEGeo.CameraRenderPosition.rotationOffset.y += RotationRatchet;
         }
 
         float rotateInfluence = SimulationRate * Time.deltaTime * RotationAmount * RotationScaleMultiplier;
