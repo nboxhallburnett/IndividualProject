@@ -3,7 +3,7 @@
 namespace NEGeo {
     public static class Helper {
 
-        public static int renderDepth = 5;
+        public static int renderDepth = 0;
 
         public static T[] FindComponentsInChildrenWithTag<T> (this GameObject parent, string tag) where T : Component {
             T[] results = new T[0];

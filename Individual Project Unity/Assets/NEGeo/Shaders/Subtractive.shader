@@ -1,6 +1,6 @@
 ﻿Shader "NEGeo/Subtractive" {
 	SubShader{
-		Tags{ "Queue" = "Geometry+1" }
+		Tags{ "Queue" = "Overlay" }
 
 		// Don't draw in the RGBA channels; just the depth buffer
 		ColorMask 0

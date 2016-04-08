@@ -7,8 +7,8 @@ namespace NEGeo {
 
         public bool Render = true;
 
-        public Transform PointOfView;
-        public Transform RenderPosition;
+        public Transform PointOfView; // Conntected To
+        public Transform RenderPosition; // This
         Transform _player;
         Camera _playerCam;
         Vector3 _defaultRot;
@@ -49,7 +49,7 @@ namespace NEGeo {
             }
 
             _relativePlayerRot = Quaternion.FromToRotation(RenderPosition.forward, -PointOfView.forward);
-            _relativePortalRot = Quaternion.FromToRotation(-PointOfView.forward, RenderPosition.forward);
+            _relativePortalRot = Quaternion.FromToRotation(RenderPosition.forward, PointOfView.forward);
         }
 
         // Update is called once per frame
@@ -61,14 +61,14 @@ namespace NEGeo {
                 Vector3 offset;
                 offset = PointOfView.position - _player.position;
 
-                transform.parent.position = RenderPosition.position - offset;
-                transform.parent.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot) * _relativePortalRot;
+                transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
+                transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
 
                 // If there are additional depth cameras to render, enable and position them
                 for (int i = 0; i < Helper.renderDepth; i++) {
                     additionalDepthRenderers[i].GetComponentInChildren<Camera>().enabled = true;
-                    additionalDepthRenderers[i].transform.position = RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1));
-                    additionalDepthRenderers[i].transform.rotation = Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot) * _relativePortalRot;
+                    additionalDepthRenderers[i].transform.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1)), RenderPosition.position, _relativePortalRot.eulerAngles);
+                    additionalDepthRenderers[i].transform.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 }
             } else {
                 interruptDisable = false;
@@ -81,6 +81,7 @@ namespace NEGeo {
                 }
             }
 
+            Debug.DrawLine(PointOfView.position, RenderPosition.position, Color.red);
         }
 
         /// <summary>
@@ -94,6 +95,7 @@ namespace NEGeo {
 
             // If the player is more than half way through the object, transport them to the linked area
             if (Vector3.Dot(distance.normalized, forward) < 0) {
+                rotationOffset += (_relativePlayerRot * player.transform.rotation).eulerAngles;
                 player.transform.rotation = _relativePlayerRot * player.transform.rotation;
 
                 //distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, new Vector3(0, 0, 180f));
