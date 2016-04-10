@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace NEGEo {
+namespace NEGeo {
     public class FalseWall : MonoBehaviour {
 
         Camera _cam;

@@ -1,7 +1,7 @@
 ﻿Shader "NEGeo/Cull" {
 	SubShader
 	{
-		Tags{ "Queue" = "Geometry-1" }
+		Tags{ "Queue" = "Overlay" }
 
 		Lighting Off
 

@@ -5,7 +5,11 @@ namespace NEGeo {
     [RequireComponent(typeof(Camera))]
     public class CameraRenderPosition : MonoBehaviour {
 
+        // Whether or not the render this portals view
         public bool Render = true;
+
+        // Whether to render the portal as a continuation or a shortcut
+        public bool Inverse = false;
 
         public Transform PointOfView; // Conntected To
         public Transform RenderPosition; // This
@@ -13,13 +17,14 @@ namespace NEGeo {
         Camera _playerCam;
         Vector3 _defaultRot;
         Vector3 _normalisedDefaultRot;
-        Camera cam;
+        Camera _cam;
 
         public Transform[] Bounds;
         Vector3[] _bounds;
-        bool interruptDisable = false;
+        CameraRenderPosition _linkedScript;
+        bool _interruptDisable = false;
 
-        GameObject[] additionalDepthRenderers;
+        GameObject[] _additionalDepthRenderers;
 
         Quaternion _relativePlayerRot;
         Quaternion _relativePortalRot;
@@ -32,55 +37,69 @@ namespace NEGeo {
             _playerCam = _player.GetComponent<Camera>();
             _defaultRot = transform.parent.rotation.eulerAngles;
             _normalisedDefaultRot = new Vector3(0, _defaultRot.y, 0);
-            cam = GetComponent<Camera>();
-            cam.fieldOfView = _player.GetComponent<Camera>().fieldOfView;
+            _cam = GetComponent<Camera>();
+            _cam.fieldOfView = _player.GetComponent<Camera>().fieldOfView;
 
             _bounds = new Vector3[Bounds.Length];
             for (int i = 0; i < Bounds.Length; i++) {
                 _bounds[i] = Bounds[i].position;
             }
 
-            additionalDepthRenderers = new GameObject[Helper.renderDepth];
+            _additionalDepthRenderers = new GameObject[Helper.renderDepth];
             for (int i = 0; i < Helper.renderDepth; i++) {
-                additionalDepthRenderers[i] = Instantiate(transform.parent.gameObject);
-                additionalDepthRenderers[i].GetComponentInChildren<CameraRenderPosition>().enabled = false;
-                additionalDepthRenderers[i].GetComponentInChildren<Camera>().depth = -(i + 2);
-                additionalDepthRenderers[i].transform.parent = transform.parent.parent;
+                _additionalDepthRenderers[i] = Instantiate(transform.parent.gameObject);
+                _additionalDepthRenderers[i].GetComponentInChildren<CameraRenderPosition>().enabled = false;
+                _additionalDepthRenderers[i].GetComponentInChildren<Camera>().depth = -(i + 2);
+                _additionalDepthRenderers[i].transform.parent = transform.parent.parent;
             }
 
             _relativePlayerRot = Quaternion.FromToRotation(RenderPosition.forward, -PointOfView.forward);
             _relativePortalRot = Quaternion.FromToRotation(RenderPosition.forward, PointOfView.forward);
+
+            _linkedScript = PointOfView.GetComponentInChildren<CameraRenderPosition>();
         }
 
         // Update is called once per frame
         void Update () {
             if (Render && PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView()) {
-                cam.enabled = true;
-                interruptDisable = true;
+                _cam.enabled = true;
+                _interruptDisable = true;
 
-                Vector3 offset;
-                offset = PointOfView.position - _player.position;
+                Vector3 offset = PointOfView.position - _player.position;
 
-                transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
-                transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
+                // Position and rotate the cameras depending on the type of illusion they are going for
+                if (!Inverse) {
+                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
+                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
+                } else {
+                    transform.parent.position = RenderPosition.position - offset;
+                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
+                }
+
+                // Set the near clipping plane of the camera to only render starting from the closest visible area
+                _cam.nearClipPlane = (Helper.FindClosestPoint(_bounds, transform.position) - transform.position).magnitude / 2f;
 
                 // If there are additional depth cameras to render, enable and position them
                 for (int i = 0; i < Helper.renderDepth; i++) {
-                    additionalDepthRenderers[i].GetComponentInChildren<Camera>().enabled = true;
-                    additionalDepthRenderers[i].transform.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1)), RenderPosition.position, _relativePortalRot.eulerAngles);
-                    additionalDepthRenderers[i].transform.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
+                    _additionalDepthRenderers[i].GetComponentInChildren<Camera>().enabled = true;
+                    _additionalDepthRenderers[i].transform.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1)), RenderPosition.position, _relativePortalRot.eulerAngles);
+                    _additionalDepthRenderers[i].transform.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 }
             } else {
-                interruptDisable = false;
-                if (cam.enabled) {
+                _interruptDisable = false;
+                if (_cam.enabled) {
                     StartCoroutine(cameraOff());
 
-                    foreach (GameObject camera in additionalDepthRenderers) {
+                    foreach (GameObject camera in _additionalDepthRenderers) {
                         StartCoroutine(cameraOff(camera.GetComponentInChildren<Camera>()));
                     }
                 }
             }
 
+            // Set the depth of the cameras to be relavent to their position to the player. This ensures the closest connected point always renders first
+            _linkedScript.SetDepth(-((RenderPosition.position - _player.position).magnitude) / 10f);
+
+            // Draw a line to show the linked portals
             Debug.DrawLine(PointOfView.position, RenderPosition.position, Color.red);
         }
 
@@ -95,12 +114,12 @@ namespace NEGeo {
 
             // If the player is more than half way through the object, transport them to the linked area
             if (Vector3.Dot(distance.normalized, forward) < 0) {
-                rotationOffset += (_relativePlayerRot * player.transform.rotation).eulerAngles;
-                player.transform.rotation = _relativePlayerRot * player.transform.rotation;
-
-                //distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, new Vector3(0, 0, 180f));
+                distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, _relativePlayerRot.eulerAngles);
                 player.transform.position = PointOfView.position;
-                player.transform.position += _relativePlayerRot * distance;
+                player.transform.position += distance;
+
+                rotationOffset += _relativePlayerRot.eulerAngles;
+                player.transform.rotation = _relativePlayerRot * player.transform.rotation;
             }
         }
 
@@ -154,22 +173,48 @@ namespace NEGeo {
         /// <summary>
         /// Check whether the bounds of this object are in view of the camera
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Whether the object is within view of the player</returns>
         public bool inScreenView () {
             return inScreenView(_bounds, _playerCam);
         }
 
+        /// <summary>
+        /// Returns the bounds of the portal
+        /// </summary>
+        /// <returns>The bounds of the portal</returns>
+        public Vector3[] GetBounds () {
+            return _bounds;
+        }
+
+        /// <summary>
+        /// Set the render depth for the camera
+        /// </summary>
+        /// <param name="depth">Depth to use for the camera</param>
+        public void SetDepth (float depth) {
+            // The depth should always be <= 0, and more than -100
+            _cam.depth = Mathf.Max(Mathf.Min(depth, 0f), -100f);
+        }
+
+        /// <summary>
+        /// Disables the camera after a set interval
+        /// </summary>
+        /// <returns></returns>
         IEnumerator cameraOff () {
             yield return new WaitForSeconds(0.1f);
-            if (!interruptDisable) {
-                cam.enabled = false;
+            if (!_interruptDisable) {
+                _cam.enabled = false;
             }
         }
 
-        IEnumerator cameraOff (Camera _cam) {
+        /// <summary>
+        /// Disabled the supplied camera after a set interval
+        /// </summary>
+        /// <param name="cam">Camera to disable</param>
+        /// <returns></returns>
+        IEnumerator cameraOff (Camera cam) {
             yield return new WaitForSeconds(0.1f);
-            if (!interruptDisable) {
-                _cam.enabled = false;
+            if (!_interruptDisable) {
+                cam.enabled = false;
             }
         }
     }

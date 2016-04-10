@@ -40,5 +40,15 @@ namespace NEGeo {
             }
             System.Array.Sort(distances, positions);
         }
+
+        public static Vector3 FindClosestPoint (Vector3[] positions, Vector3 point) {
+            Vector3 closest = positions[0];
+            for (int i = 0; i < positions.Length; i++) {
+                if (Vector3.Magnitude(positions[i] - point) < Vector3.Magnitude(closest - point)) {
+                    closest = positions[i];
+                }
+            }
+            return closest;
+        }
     }
 }
