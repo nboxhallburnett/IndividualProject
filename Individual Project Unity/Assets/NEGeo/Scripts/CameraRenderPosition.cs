@@ -31,6 +31,8 @@ namespace NEGeo {
 
         public static Vector3 rotationOffset = Vector3.zero;
 
+        OVRPlayerController _playerControl;
+
         // Use this for initialization
         void Start () {
             _player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
@@ -57,6 +59,8 @@ namespace NEGeo {
             _relativePortalRot = Quaternion.FromToRotation(RenderPosition.forward, PointOfView.forward);
 
             _linkedScript = PointOfView.GetComponentInChildren<CameraRenderPosition>();
+
+            _playerControl = _player.GetComponentInParent<OVRPlayerController>();
         }
 
         // Update is called once per frame
@@ -69,10 +73,10 @@ namespace NEGeo {
 
                 // Position and rotate the cameras depending on the type of illusion they are going for
                 if (!Inverse) {
-                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
+                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position + _playerControl.GetMoveThrottle(), _relativePortalRot.eulerAngles);
                     transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 } else {
-                    transform.parent.position = RenderPosition.position - offset;
+                    transform.parent.position = RenderPosition.position - offset + _playerControl.GetMoveThrottle();
                     transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
                 }
 
@@ -101,6 +105,8 @@ namespace NEGeo {
 
             // Draw a line to show the linked portals
             Debug.DrawLine(PointOfView.position, RenderPosition.position, Color.red);
+            // Draw a line to point in the direction of the portal
+            Debug.DrawRay(RenderPosition.position, RenderPosition.forward, Color.green);
         }
 
         /// <summary>
@@ -120,6 +126,8 @@ namespace NEGeo {
 
                 rotationOffset += _relativePlayerRot.eulerAngles;
                 player.transform.rotation = _relativePlayerRot * player.transform.rotation;
+
+                _playerControl.UpdateMoveThrottle(_relativePlayerRot * _playerControl.GetMoveThrottle());
             }
         }
 

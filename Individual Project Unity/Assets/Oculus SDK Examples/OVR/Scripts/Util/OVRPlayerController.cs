@@ -433,5 +433,13 @@ public class OVRPlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler(euler);
         }
     }
+
+    public void UpdateMoveThrottle (Vector3 newThrottle) {
+        MoveThrottle = newThrottle;
+    }
+
+    public Vector3 GetMoveThrottle () {
+        return MoveThrottle;
+    }
 }
 
