@@ -64,21 +64,26 @@ namespace NEGeo {
         }
 
         // Update is called once per frame
-        void Update () {
-            if (Render && PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView()) {
-                _cam.enabled = true;
-                _interruptDisable = true;
+        void LateUpdate () {
+            if (Render && (PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView() || (!PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView() && _cam.enabled))) {
+                if (PointOfView.GetComponentInChildren<CameraRenderPosition>().inScreenView()) {
+                    _cam.enabled = true;
+                    _interruptDisable = true;
+                }
 
                 Vector3 offset = PointOfView.position - _player.position;
 
                 // Position and rotate the cameras depending on the type of illusion they are going for
                 if (!Inverse) {
-                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position + _playerControl.GetMoveThrottle(), _relativePortalRot.eulerAngles);
+                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
                     transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 } else {
-                    transform.parent.position = RenderPosition.position - offset + _playerControl.GetMoveThrottle();
-                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
+                    transform.parent.position = RenderPosition.position - offset;
+                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler((RenderPosition.transform.up == Vector3.up ? rotationOffset : -rotationOffset) + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
                 }
+
+                // Set the near clipping plane of the camera to only render starting from the closest visible area
+                //_cam.nearClipPlane = Mathf.Max((Helper.FindClosestPoint(PointOfView.GetComponentInChildren<CameraRenderPosition>().GetBounds(), _playerCam.transform.position) - _playerCam.transform.position).magnitude - 0.3f, 0.1f);
 
                 // Set the near clipping plane of the camera to only render starting from the closest visible area
                 _cam.nearClipPlane = (Helper.FindClosestPoint(_bounds, transform.position) - transform.position).magnitude / 2f;
@@ -117,17 +122,22 @@ namespace NEGeo {
         /// <param name="forward">Forward vector of the currently colliding object</param>
         public void positionPlayer (Collider player, Vector3 centre, Vector3 forward) {
             Vector3 distance = player.transform.position - centre;
+            Quaternion inverseFlip = Quaternion.Euler(0, 0, 0);
+
+            if (Inverse != _linkedScript.Inverse) {
+                inverseFlip = Quaternion.Euler(0, 180f, 0);
+            }
 
             // If the player is more than half way through the object, transport them to the linked area
             if (Vector3.Dot(distance.normalized, forward) < 0) {
-                distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, _relativePlayerRot.eulerAngles);
+                distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, (_relativePlayerRot.eulerAngles + inverseFlip.eulerAngles));
                 player.transform.position = PointOfView.position;
                 player.transform.position += distance;
 
-                rotationOffset += _relativePlayerRot.eulerAngles;
-                player.transform.rotation = _relativePlayerRot * player.transform.rotation;
+                rotationOffset += _relativePlayerRot.eulerAngles + inverseFlip.eulerAngles;
+                player.transform.rotation = _relativePlayerRot * inverseFlip * player.transform.rotation;
 
-                _playerControl.UpdateMoveThrottle(_relativePlayerRot * _playerControl.GetMoveThrottle());
+                _playerControl.UpdateMoveThrottle(_relativePlayerRot * inverseFlip * _playerControl.GetMoveThrottle());
             }
         }
 
@@ -145,7 +155,19 @@ namespace NEGeo {
                 // Otherwise, if it is within the screen bounds, then it is visible
                 if (relativePos.x > 0f && relativePos.x < Screen.width &&
                     relativePos.y > 0f && relativePos.y < Screen.height) {
-                    return true;
+
+                    // Only render it the camera can directly see the render area
+                    RaycastHit hit;
+                    if (Physics.Raycast(camera.transform.position, (point - camera.transform.position).normalized, out hit)) {
+                        if (hit.collider.GetComponentInChildren<CameraRenderPosition>() != null) {
+                            Debug.DrawLine(camera.transform.position, hit.collider.transform.position, Color.yellow);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }

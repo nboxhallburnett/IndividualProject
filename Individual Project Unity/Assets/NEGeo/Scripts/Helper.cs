@@ -50,5 +50,34 @@ namespace NEGeo {
             }
             return closest;
         }
+
+        public static Vector3 FindClosestPoint (Vector3[] positions, Vector3[] points) {
+            Vector3 closest = points[0];
+
+            for (int i = 0; i < points.Length; i++) {
+                if (Vector3.Magnitude(FindClosestPoint(positions, points[i]) - points[i]) < Vector3.Magnitude(FindClosestPoint(positions, closest) - closest)) {
+                    closest = points[i];
+                }
+            }
+
+            /*for (int i = 0; i < positions.Length; i++) {
+                if (Vector3.Magnitude(positions[i] - point) < Vector3.Magnitude(closest - point)) {
+                    closest = positions[i];
+                }
+            }*/
+            return closest;
+        }
+
+        public static float FindShortestMagnitude (Vector3[] positions, Vector3 point) {
+            Vector3 closest = positions[0];
+            float shortest = float.MaxValue;
+            for (int i = 0; i < positions.Length; i++) {
+                if (Vector3.Magnitude(positions[i] - point) < shortest) {
+                    closest = positions[i];
+                    shortest = Vector3.Magnitude(positions[i] - point);
+                }
+            }
+            return shortest;
+        }
     }
 }
