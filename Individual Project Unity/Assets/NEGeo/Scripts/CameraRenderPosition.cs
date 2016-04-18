@@ -13,8 +13,10 @@ namespace NEGeo {
 
         public Transform PointOfView; // Conntected To
         public Transform RenderPosition; // This
+        public Transform Moveable;
         Transform _player;
         Camera _playerCam;
+        Transform _playerBase;
         Vector3 _defaultRot;
         Vector3 _normalisedDefaultRot;
         Camera _cam;
@@ -37,7 +39,8 @@ namespace NEGeo {
         void Start () {
             _player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
             _playerCam = _player.GetComponent<Camera>();
-            _defaultRot = transform.parent.rotation.eulerAngles;
+            _defaultRot = Moveable.rotation.eulerAngles;
+            _playerBase = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
             _normalisedDefaultRot = new Vector3(0, _defaultRot.y, 0);
             _cam = GetComponent<Camera>();
             _cam.fieldOfView = _player.GetComponent<Camera>().fieldOfView;
@@ -49,10 +52,10 @@ namespace NEGeo {
 
             _additionalDepthRenderers = new GameObject[Helper.renderDepth];
             for (int i = 0; i < Helper.renderDepth; i++) {
-                _additionalDepthRenderers[i] = Instantiate(transform.parent.gameObject);
+                _additionalDepthRenderers[i] = Instantiate(Moveable.gameObject);
                 _additionalDepthRenderers[i].GetComponentInChildren<CameraRenderPosition>().enabled = false;
                 _additionalDepthRenderers[i].GetComponentInChildren<Camera>().depth = -(i + 2);
-                _additionalDepthRenderers[i].transform.parent = transform.parent.parent;
+                _additionalDepthRenderers[i].transform.parent = Moveable.parent;
             }
 
             _relativePlayerRot = Quaternion.FromToRotation(RenderPosition.forward, -PointOfView.forward);
@@ -71,19 +74,16 @@ namespace NEGeo {
                     _interruptDisable = true;
                 }
 
-                Vector3 offset = PointOfView.position - _player.position;
+                Vector3 offset = PointOfView.position - _player.position + ((_player.position - _player.parent.parent.position) / 2);
 
                 // Position and rotate the cameras depending on the type of illusion they are going for
                 if (!Inverse) {
-                    transform.parent.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
-                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
+                    Moveable.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset, RenderPosition.position, _relativePortalRot.eulerAngles);
+                    Moveable.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 } else {
-                    transform.parent.position = RenderPosition.position - offset;
-                    transform.parent.rotation = _relativePortalRot * Quaternion.Euler((RenderPosition.transform.up == Vector3.up ? rotationOffset : -rotationOffset) + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
+                    Moveable.position = RenderPosition.position - offset;
+                    Moveable.rotation = _relativePortalRot * Quaternion.Euler((RenderPosition.transform.up == Vector3.up ? rotationOffset : -rotationOffset) + _defaultRot - _normalisedDefaultRot + new Vector3(0, 180f, 0));
                 }
-
-                // Set the near clipping plane of the camera to only render starting from the closest visible area
-                //_cam.nearClipPlane = Mathf.Max((Helper.FindClosestPoint(PointOfView.GetComponentInChildren<CameraRenderPosition>().GetBounds(), _playerCam.transform.position) - _playerCam.transform.position).magnitude - 0.3f, 0.1f);
 
                 // Set the near clipping plane of the camera to only render starting from the closest visible area
                 _cam.nearClipPlane = (Helper.FindClosestPoint(_bounds, transform.position) - transform.position).magnitude / 2f;
@@ -91,7 +91,7 @@ namespace NEGeo {
                 // If there are additional depth cameras to render, enable and position them
                 for (int i = 0; i < Helper.renderDepth; i++) {
                     _additionalDepthRenderers[i].GetComponentInChildren<Camera>().enabled = true;
-                    _additionalDepthRenderers[i].transform.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset + ((transform.parent.position - _player.position) * (i + 1)), RenderPosition.position, _relativePortalRot.eulerAngles);
+                    _additionalDepthRenderers[i].transform.position = Helper.RotatePointAroundPivot(RenderPosition.position - offset + ((Moveable.position - _player.position) * (i + 1)), RenderPosition.position, _relativePortalRot.eulerAngles);
                     _additionalDepthRenderers[i].transform.rotation = _relativePortalRot * Quaternion.Euler(rotationOffset + _defaultRot - _normalisedDefaultRot);
                 }
             } else {
