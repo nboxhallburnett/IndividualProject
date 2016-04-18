@@ -310,7 +310,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &408924
 Transform:
   m_ObjectHideFlags: 1
@@ -585,7 +585,7 @@ Camera:
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
-  m_TargetEye: 0
+  m_TargetEye: 3
   m_HDR: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
@@ -951,6 +951,7 @@ MonoBehaviour:
   Inverse: 1
   PointOfView: {fileID: 0}
   RenderPosition: {fileID: 447078}
+  Moveable: {fileID: 498746}
   Bounds:
   - {fileID: 496426}
   - {fileID: 444342}
@@ -965,7 +966,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 171616}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbf83ee8d1e41ba4fb54cf03bfe5e601, type: 3}
   m_Name: 
