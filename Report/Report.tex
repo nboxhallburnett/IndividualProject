@@ -6,8 +6,11 @@
 \usepackage[a4paper]{geometry}		% Set the paper type
 \usepackage[T1]{fontenc}			% Change the encoding to allow for more character types
 \usepackage{booktabs}				% More professional looking table layouts
+\usepackage{etoolbox}				% Lets you do fancy stuff with section types
+\usepackage{fancyhdr}				% Fancy Headers
 \usepackage{graphicx} 				% For loading graphic files
 \usepackage{multicol}				% Used to set column counts
+\usepackage{pdfpages}				% Used to include external PDFs in the document
 \usepackage{ragged2e}				% for '\RaggedRight' macro (allows hyphenation)
 \usepackage{setspace}				% Sets the spacing between lines
 \usepackage{tabularx}				% for 'tabularx' environment and 'X' column type
@@ -24,6 +27,20 @@
 \onehalfspacing						% Set the spacing between the lines of text
 \graphicspath{Images/}				% Set the default path to use for images
 
+% Set the page number and running title as header
+\pagestyle{fancy}
+\fancyhf{}
+\fancyheadoffset{0cm}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[R]{\thepage}
+\fancyhead[L]{Is Immersion Possible in Non-Euclidean Virtual Environments?}
+\fancypagestyle{plain}{%
+	\fancyhf{}%
+	\fancyhead[R]{\thepage}%
+	\fancyhead[L]{Is Immersion Possible in Non-Euclidean Virtual Environments?}
+}
+
 % Set formatting for chapter titles
 \titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter}{1em}{\huge}
 
@@ -33,48 +50,64 @@
 % Set formatting for section titles
 \titleformat{\subsection}[hang]{\normalsize\bfseries}{\thesubsection}{1em}{\normalsize}
 
+% Add the abstract to the table of contents
+\patchcmd{\abstract}{\titlepage}{\titlepage
+	\addcontentsline{toc}{chapter}{Abstract}}{}{}
+
 % Begin the document
 \begin{document}
 
 	% Title Page
 	\maketitle
 
-	% Remove page numbers
-	\renewcommand\thepage{}
+	% Set the inital pages to use roman numerals for numbering
+	\pagenumbering{roman}
+
+	% Table of contents
+	\tableofcontents
 
 	% Abstract
 	\begin{abstract}
+		\thispagestyle{plain}
 		expression of general problem/area
-		
+
 		specific problem/objective attempted
-		
+
 		what you have achieved
-		
+
 		lessons learned
-		
+
 		%% DO NOT START BY SAYING WHAT YOU HAVE DONE 
 		%% DO NOT INCLUDE JARGON / DETAILS 
 		% Eg bad start “I have implemented a C\# database running on Linux v4.5.2 … “
 		% Eg bad start “ I have created a web application” – start with overview and problem area first.
 		%% MAKE IT UNDERSTANDABLE TO ALL ! 
-		
+
 
 %		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, especially in the video game market, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world, and the effectiveness they have in a users perception, need to be considered.
 %		This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as 'realistic' in VR. As well as this, it also covers how these requirements have been, and can, be adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
 %		Gaps in the current literature are outlined, alongside perspective areas for future research.
 	\end{abstract}
 
+	% Set formatting for section titles
+	\titleformat{\chapter}[hang]{\large\bfseries}{\thechapter}{1em}{\large}
+
+	% Remove section numbering for the acknowledgements
+	\setcounter{secnumdepth}{-2}
+
 	% Document Acknowledgements
-	\section*{Acknowledgements}
-		Here is where I will thank my supervisor/examiner/caffeine for helping me along the way
+	\chapter{Acknowledgements}
+		I would like to thank my supervisor Hugh Osborne, and examiner Duke Gledhill, for their invaluable feedback and suggestions throughout.
+		I would also like to thank all the participants who took the time to take part in the product experiments.
 
-	% Table of contents
-	\tableofcontents
+	% Set formatting for chapter titles
+	\titleformat{\chapter}[hang]{\huge\bfseries}{\thechapter}{1em}{\huge}
 
-	% Reset the page count and add page numbering again
+	% Reset the page count, reset the numbering style to arabic, and add section numbering again
 	\newpage
 	\renewcommand\thepage{\arabic{page}}
 	\pagenumbering{arabic}
+	\setcounter{secnumdepth}{3}
 
 	% Introduction
 	\input{intro}
