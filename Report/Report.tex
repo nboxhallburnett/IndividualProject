@@ -1,11 +1,14 @@
 \documentclass[abstract=on,12pt]{scrreprt}
 
 % Set packages to be used
+\usepackage[rightcaption]{sidecap}	% Allows for figures with captions on the side, rather than the top/bottom
 \usepackage[hidelinks]{hyperref}	% Adds support for hyperlinks
 \usepackage[british]{babel}			% Set the language to UK English
 \usepackage[a4paper]{geometry}		% Set the paper type
 \usepackage[T1]{fontenc}			% Change the encoding to allow for more character types
 \usepackage{booktabs}				% More professional looking table layouts
+\usepackage{csquotes}				% Easy quotation
+\usepackage{enumitem}				% Nicer itemizations
 \usepackage{etoolbox}				% Lets you do fancy stuff with section types
 \usepackage{fancyhdr}				% Fancy Headers
 \usepackage{graphicx} 				% For loading graphic files
@@ -18,6 +21,7 @@
 \usepackage{apalike}				% Format references in APA styling
 \usepackage{gensymb}				% Allow inclusion of special characters, such as degrees
 \usepackage{lmodern} 				% Type1-font for non-english texts and characters
+\usepackage{wrapfig}				% Allows wrapping figures in text blocks
 
 % Set document specific info
 \title{Is Immersion Possible in Non-Euclidean Virtual Environments?}
@@ -69,13 +73,13 @@
 	% Abstract
 	\begin{abstract}
 		\thispagestyle{plain}
-		expression of general problem/area
+		%expression of general problem/area
 
-		specific problem/objective attempted
+		%specific problem/objective attempted
 
-		what you have achieved
+		%what you have achieved
 
-		lessons learned
+		%lessons learned
 
 		%% DO NOT START BY SAYING WHAT YOU HAVE DONE 
 		%% DO NOT INCLUDE JARGON / DETAILS 
@@ -84,9 +88,15 @@
 		%% MAKE IT UNDERSTANDABLE TO ALL ! 
 
 
-%		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, especially in the video game market, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world, and the effectiveness they have in a users perception, need to be considered.
-%		This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as 'realistic' in VR. As well as this, it also covers how these requirements have been, and can, be adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
-%		Gaps in the current literature are outlined, alongside perspective areas for future research.
+		With Virtual Reality (VR) development and availability increasing as rapidly as it has in recent years, experiences that are capable from Virtual Environments (VE) that are not limited to the restrictions of the real world, and the effectiveness they have in a users perception and sense of immersion, need to be considered.
+		Studies surrounding a users interaction in VR environments that have taken place previously tend to focus on how reliably the user can interact with an environment mimicking the real world.
+		This study attempts to fill the gap in existing research by examining the effects non-Euclidean geometry has on a users sense of immersion in VR.
+		% TODO Talk about data gathering
+		% TODO Talk about results
+
+		%This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as \enquote{realistic} in VR.
+		%As well as this, it also covers how these requirements have been, and can be, adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
+		%Gaps in the current literature are outlined, alongside prospective areas for future research.
 	\end{abstract}
 
 	% Set formatting for section titles
