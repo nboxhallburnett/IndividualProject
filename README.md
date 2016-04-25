@@ -1,6 +1,6 @@
 # Individual Project
 
-This repository contains the product and report which I have developed as part of my individual project module during my final year at the University of Huddersfield.
+This repository contains the report and product I have developed for my individual project module during my fourth year at the University of Huddersfield.
 
 ## Abstract
 
@@ -13,7 +13,5 @@ This study attempts to fill the gap in existing research by examining the effect
 ## Screenshots
 
 ![scene](https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Images/Lines_Everywhere2.png)
-
-![game](https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Images/NE_View.png)
 
 ![gif](https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Images/NE_View_Gif.gif)
