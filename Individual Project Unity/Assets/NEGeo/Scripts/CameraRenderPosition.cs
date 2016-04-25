@@ -11,6 +11,7 @@ namespace NEGeo {
         // Whether to render the portal as a continuation or a shortcut
         public bool Inverse = false;
 
+        // Point and camera variables
         public Transform PointOfView; // Conntected To
         public Transform RenderPosition; // This
         public Transform Moveable;
@@ -21,6 +22,7 @@ namespace NEGeo {
         Vector3 _normalisedDefaultRot;
         Camera _cam;
 
+        // Point bounds
         public Transform[] Bounds;
         Vector3[] _bounds;
         CameraRenderPosition _linkedScript;
@@ -31,12 +33,15 @@ namespace NEGeo {
         Quaternion _relativePlayerRot;
         Quaternion _relativePortalRot;
 
+        // Offset to use for camera rotations relative to the player
         public static Vector3 rotationOffset = Vector3.zero;
 
+        // Players movement script
         OVRPlayerController _playerControl;
 
         // Use this for initialization
         void Start () {
+            // Get relative variables for script use
             _player = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
             _playerCam = _player.GetComponent<Camera>();
             _defaultRot = Moveable.rotation.eulerAngles;
@@ -45,11 +50,13 @@ namespace NEGeo {
             _cam = GetComponent<Camera>();
             _cam.fieldOfView = _player.GetComponent<Camera>().fieldOfView;
 
+            // Get the positions of the area bounds
             _bounds = new Vector3[Bounds.Length];
             for (int i = 0; i < Bounds.Length; i++) {
                 _bounds[i] = Bounds[i].position;
             }
 
+            // If there are requests for additional render depths, create the requirements
             _additionalDepthRenderers = new GameObject[Helper.renderDepth];
             for (int i = 0; i < Helper.renderDepth; i++) {
                 _additionalDepthRenderers[i] = Instantiate(Moveable.gameObject);
@@ -58,11 +65,12 @@ namespace NEGeo {
                 _additionalDepthRenderers[i].transform.parent = Moveable.parent;
             }
 
+            // Get rotation Quaternions between the two points
             _relativePlayerRot = Quaternion.FromToRotation(RenderPosition.forward, -PointOfView.forward);
             _relativePortalRot = Quaternion.FromToRotation(RenderPosition.forward, PointOfView.forward);
 
+            // Get external script references
             _linkedScript = PointOfView.GetComponentInChildren<CameraRenderPosition>();
-
             _playerControl = _player.GetComponentInParent<OVRPlayerController>();
         }
 
@@ -115,28 +123,33 @@ namespace NEGeo {
         }
 
         /// <summary>
-        /// Re-Position the player from their current position to the equivelant position of it's point of view, depending on their relative position
+        /// Re-Position the player from their current position to the equivelant position of its point of view, depending on their relative position
         /// </summary>
         /// <param name="player">Player to potentially transport</param>
         /// <param name="centre">Centre of the currently colliding object</param>
         /// <param name="forward">Forward vector of the currently colliding object</param>
         public void positionPlayer (Collider player, Vector3 centre, Vector3 forward) {
+            // Get the distance vector between the player and the centre of the currently colliding object
             Vector3 distance = player.transform.position - centre;
             Quaternion inverseFlip = Quaternion.Euler(0, 0, 0);
 
+            // If only one of the points are inverted, make sure to flip the player
             if (Inverse != _linkedScript.Inverse) {
                 inverseFlip = Quaternion.Euler(0, 180f, 0);
             }
 
             // If the player is more than half way through the object, transport them to the linked area
             if (Vector3.Dot(distance.normalized, forward) < 0) {
+                // Set player position
                 distance = Helper.RotatePointAroundPivot(distance, Vector3.zero, (_relativePlayerRot.eulerAngles + inverseFlip.eulerAngles));
                 player.transform.position = PointOfView.position;
                 player.transform.position += distance;
 
+                // Set player rotation
                 rotationOffset += _relativePlayerRot.eulerAngles + inverseFlip.eulerAngles;
                 player.transform.rotation = _relativePlayerRot * inverseFlip * player.transform.rotation;
 
+                // Update the players momentum
                 _playerControl.UpdateMoveThrottle(_relativePlayerRot * inverseFlip * _playerControl.GetMoveThrottle());
             }
         }
