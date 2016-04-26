@@ -59,3 +59,4 @@ node_modules/
 *.out
 *.pdf
 *.synctex.gz
+*.bib
