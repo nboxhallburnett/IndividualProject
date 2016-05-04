@@ -16,8 +16,11 @@
 	\label{appendix:code}
 
 		Below are code snippets for sections or complete functions that have specifically been referenced in the body of the report.
+		The full source code and project can be found at the GitHub Repository here:
 
-		\begin{lstlisting}[caption="Camera Positioning - CameraRenderPosition.cs", label=appendix:code:camera]
+		\url{https://www.github.com/nboxhallburnett/IndividualProject}
+
+		\begin{lstlisting}[caption="Camera Positioning - CameraRenderPosition.cs", label=appendix:code:camera, firstnumber=85]
 Vector3 offset = PointOfView.position - _player.position + ((_player.position - _player.parent.parent.position) / 2);
 
 // Position and rotate the cameras depending on the type of illusion they are going for
@@ -33,7 +36,7 @@ if (!Inverse) {
 _cam.nearClipPlane = (Helper.FindClosestPoint(_bounds, transform.position) - transform.position).magnitude / 2f;
 		\end{lstlisting}
 
-		\begin{lstlisting}[caption="Player Positioning - CameraRenderPosition.cs", label=appendix:code:player]
+		\begin{lstlisting}[caption="Player Positioning - CameraRenderPosition.cs", label=appendix:code:player, firstnumber=125]
 /// <summary>
 /// Re-Position the player from their current position to the equivelant position of its point of view, depending on their relative position
 /// </summary>
