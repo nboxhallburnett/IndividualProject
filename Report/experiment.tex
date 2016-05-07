@@ -13,6 +13,10 @@
 
 		During the experiments, participants were asked to fill out a 2 page questionnaire, a blank version of which can be seen on page \pageref{appendix:question}.
 		After viewing the first scene, participants were asked to fill out the first page of the questionnaire. Once they'd filled the page, they would view the second scene, after which they were asked to fill out the second page. % TODO: Reword this
+		All participants were naive to the purpose of the experiments.
+
+		An Oculus Rift Developer Kit 2 was used as the display device for the experiments, using the supplied IR camera for six degrees of freedom head tracking within the scenes.
+		The same desktop computer was used for all experiments (CPU: Intel Core i7 4790, GPU: NVIDIA GTX 970, RAM: 16GB), to ensure consistent render speeds for each participant.
 
 		The analysis of the gathered results will be covered in three sections. The first will cover the results from all 10 experiments solely on the data gathered for the standard scene; The second covers the results from all 10 experiments solely on the data from the non-Euclidean scene; Finally, the third covers the comparison between the two scene types depending on the order of viewing. % TODO: Reword this?
 
@@ -25,15 +29,17 @@
 		\label{exp:exp:standard}
 
 			Having an experiment scene using standard Euclidean geometry which follows a similar layout to the non-Euclidean scene sets a good foundation for the validation of the results. % TODO: Reword this?
-			The questionnaire the participants were asked to fill in focused on two main metrics, their personal sense of immersion within the scene, as well as their sense of comfort navigating the scene.
+			The questionnaire the participants were asked to fill in focused on two main metrics, their personal sense of immersion within the scene, as well as their sense of comfort navigating within the scene.
 
 			% Talk about the results specific to the standard euclidean geometery here.
 			% Used to get a base result for immersion
 			% Consistent high ratings for immersion
 			% Navigation comfort was varied, but talk about the high mean values
 
-			% IMMERSION MEAN: 7
-			% COMFORT MEAN: 7
+			% IMMERSION MEAN:  7
+			% IMMERSION STDEV: 1 - LOWER SD MEANS LESS VARIANCE
+			% COMFORT MEAN:    7
+			% COMFORT STDEV:   2
 
 			\begin{figure}[H]
 				\includegraphics[width=0.7\textwidth]{Images/Standard_Immersion}
@@ -67,8 +73,10 @@
 			% More responses in the higher end of the scale - talk about the written feedback
 			% Lower comfort with navigation
 
-			% IMMERSION MEAN: 7
-			% COMFORT MEAN: 6.2
+			% IMMERSION MEAN:  7
+			% IMMERSION STDEV: 1.342 (4SF)
+			% COMFORT MEAN:    6.2
+			% COMFORT STDEV:   1.6
 
 			\begin{figure}[H]
 				\includegraphics[width=0.7\textwidth]{Images/NE_Immersion}
@@ -95,6 +103,10 @@
 		\label{exp:exp:comp}
 
 			With the results of both individual scenes gathered and analysed, 
+
+			% 5 Participants took part in exp 1, 5 in exp 2.
+			% exp 1 40% of participants had not used a VR system previously.
+			% exp 2 20% of participants had not used a VR system previously.
 
 			% Experiment 1 was Standard First
 			% Experiment 2 was NE First
