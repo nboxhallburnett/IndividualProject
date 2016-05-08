@@ -24,11 +24,12 @@
 \usepackage{lmodern} 				% Type1-font for non-english texts and characters
 \usepackage{wrapfig}				% Allows wrapping figures in text blocks
 \usepackage{color}					% Pretty Colours
+\usepackage{float}
 
 % Set document specific info
 \title{Is Immersion Possible in Non-Euclidean Virtual Environments?}
 \subtitle{CHP2524 - Individual Project Report}
-\author{Nathan Boxhall-Burnett}
+\author{Nathan Boxhall-Burnett - u1254544}
 \setlength{\columnsep}{1cm}			% Set the spacing between columns
 \onehalfspacing						% Set the spacing between the lines of text
 %\doublespacing
@@ -61,14 +62,15 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyheadoffset{0cm}
+\fancyfootoffset{0cm}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-\fancyhead[R]{\thepage}
 \fancyhead[L]{Is Immersion Possible in Non-Euclidean Virtual Environments?}
+\fancyfoot[C]{\thepage}
 \fancypagestyle{plain}{
 	\fancyhf{}
-	\fancyhead[R]{\thepage}
 	\fancyhead[L]{Is Immersion Possible in Non-Euclidean Virtual Environments?}
+	\fancyfoot[C]{\thepage}
 }
 
 % Set formatting for chapter titles
@@ -136,7 +138,7 @@
 	\newpage
 	\renewcommand\thepage{\arabic{page}}
 	\pagenumbering{arabic}
-	\setcounter{secnumdepth}{3}
+	\setcounter{secnumdepth}{2}
 
 	% Introduction
 	\input{intro}
