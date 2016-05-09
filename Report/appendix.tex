@@ -15,6 +15,15 @@
 		\listoffigures						% Display the list of figures
 	\endgroup
 
+	\section{Questionnaire}
+		\label{appendix:question}
+		A blank copy of the form used to gather the feedback discussed in Chapter \ref{exp} can be seen in the following two pages. Either the 1 or 2 were highlighted under the 'Experiment' section at the top of each page before being given to a participant. This was used as a reference for myself as to which experiment the form was for, without indicating to the participant the nature of the experiment.
+
+		A digital transcription of the gathered data can be found in the \enquote{Raw Data} sheet in the \href{https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Resources/Feedback\%20Data.xlsx?raw=true}{\texttt{Report/Resources/Feedback Data.xlsx}} file inside the Git repository mentioned in \autoref{appendix:code}.
+		The completed physical versions of the forms containing the raw data gathered are available upon request.
+
+		\includepdf[pages={-},scale=1]{"Resources/Project Feedback Questionnaire"}
+
 	\section{Code Samples}
 	\label{appendix:code}
 
@@ -73,14 +82,22 @@ public void positionPlayer (Collider player, Vector3 centre, Vector3 forward) {
 }
 		\end{lstlisting}
 
-	\section{Questionnaire}
-		\label{appendix:question}
-		A blank copy of the form used to gather the feedback discussed in Chapter \ref{exp} can be seen in the following two pages. Either the 1 or 2 were highlighted under the 'Experiment' section at the top of each page before being given to a participant. This was used as a reference for myself as to which experiment the form was for, without indicating to the participant the nature of the experiment.
+		\begin{lstlisting}[caption="Render Cull Shader - Subtractive.shader", label=appendix:code:shader]
+Shader "NEGeo/Subtractive" {
+	SubShader{
+		// Render just before the Overlay layer, to make sure it is rendered on top of other objects
+		Tags{ "Queue" = "Overlay-1" }
 
-		A digital transcription of the gathered data can be found in the \enquote{Raw Data} sheet in the \href{https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Resources/Feedback\%20Data.xlsx?raw=true}{\texttt{Report/Resources/Feedback Data.xlsx}} file inside the Git repository mentioned in \autoref{appendix:code}.
-		The completed physical versions of the forms containing the raw data gathered are available upon request.
+		// Don't draw in the RGBA channels
+		ColorMask 0
+		// Only write to the Z-Buffer
+		ZWrite On
 
-		\includepdf[pages={-},scale=1]{"Resources/Project Feedback Questionnaire"}
+		// No need to do any additional processing in the pass
+		Pass { }
+	}
+}
+		\end{lstlisting}
 
 	\section{Ethics Review}
 	\label{appendix:ethics}
