@@ -1,24 +1,53 @@
 \chapter{Project Evaluation}
 \label{eval}
 
-	The scope of this completed product and project as a whole differs to my original plan.
+	\section[Scope]{Project Scope}
 
-	% TODO - This is the one bit where you can talk in the first person, so go wild.
+		The scope of this completed product and project as a whole differs to my proposed plan at the beginning of the year.
+		The plan for this project was to study the effects tracking calibration of a VR headset has on a user outside of VR.
+		However during the research stage for the project, existing studies were found which already covered the aspects I was planning on studying.
+		The scope of this project came from combining my original proposal in the second year of creating a framework to build non-Euclidean virtual environments with the research I had found for VR.
+		The decision to switch to this project instead of either of the originally proposed plans is one I am happy with.
+		The scope of this project compared to the original ones is a lot more suitable for the time which was available for the project, and it is also a project which was more interesting to both design and conduct experiments for.
 
-	% Talk about how I was originally wanting to do an experiment about the effects of calibration on people in VR, but that guy had already reserached that stuff to death
-	% So you decided to do a mix of your original proposal with that one, and you found it to be more interesting as a result
+	\section[Implementation]{Product Implementation}
 
-	% Talk about how you originally wanted to write your own engine for it in C++ / DirectX, but a mixture of time and priorities made you decide to use an existing engine you knew well instead (save time reinventing the wheel for things like lighting, camera stuff, etc)
-	% Also you wanted to limit the amount of outside variables as possible, so an existing engine helped with that
+		The original plan for the product was to build an engine in DirectX 11 designed specifically for creating non-Euclidean environments.
+		Although initial testing for the custom engine was promising, due to the scope of the features that would need to be implemented into it for it to be viable for the experiments, I decided to switch instead to an existing engine (Unity), which has the features which are not unique to the project built well already.
+		The switch to the existing engine allowed me to focus more of my efforts on getting the non-Euclidean features of the product working well, and allowed me to use tools provided by Oculus for official support of the HMD which was to be used in the experiments.
 
-	% Talk about being happy with the amount of data you recieved, and how the results went against your original expectations for the results (which is a good thing!)
+		Using the existing engine for creating the product was not a perfect solution, however.
+		The way in which the Oculus Rift SDK interacts with the Unity engine, while fine for Euclidean scenes, had minor issues when working with the implementation of non-Euclidean space made for this project.
+		Although the implementation works perfectly fine when the HMD is not attached and it is being rendered direct to a regular monitor, the Oculus SDK modifies the depth and positioning of the cameras when rendering to the HMD, which sometimes caused slight gaps to appear between connected areas.
+		I was able to minimise the impact it had by working around its offsets as best I could (See line 85 in \autoref{appendix:code:camera}), it was still noticed by a few of the participants in the experiments.
 
-	% Talk about how you could have made use of further possibilities of the system, such as one way paths, or walking into the same room, but on a different surface, etc
+		Even though there were issues caused by the way the Oculus SDK positioned the cameras, I am happy with the way the implementation of the system turned out.
+		When the system is being ran outside of the HMD, the rendering of the connections is seamless (As seen in \autoref{design:fig:game}), and when attempting to move between the two connected points, there is no indication to the player that they have moved anywhere other than where they expect.
+		As well as this, the indicators in the scene view in the Unity editor that were added to the connection points worked very well, and were a great help when designing the scenes to be used for the experiments.
 
-	% Talk about how you could have repeated the experiment with the feedback but with different navigation methods to see how that effects immersion - room for further study
+		In terms of how well used the system was for the scenes created for the experiments, I feel that I could have probably expanded the non-Euclidean scene to use more examples of the potential of the system.
+		I do feel that the actual created scene was effective for its purpose in the experiment, however there are additional use cases I would have liked to have added, such as making the player appear to walk onto a different surface of the scene environment (such as a wall or roof), or perhaps scale the player so they are bigger or smaller when moving into a familiar space. % TODO: Reword this?
 
-	% Talk about how well the effect looked in the end (even though it took a long time to get 'right')
+	\section{Experiment}
 
-	% Talk about the downside of using the existing engine with the weird positioning stuff that oculus was doing with the camera, giving it a really slight crack in the margins, and how it looks fine when not using the rift
+		The original time frame for conducting the experiments themselves did not take into consideration the fact that I would have to get the required equipment set up and installed on machines I did not have administrative rights to, due to originally planning on running them off of a personal laptop.
+		Due to compatibility restrictions on the laptop hardware, even though the machine itself was powerful enough to run the product in VR, I ended up having to use a different machine to run the experiment from.
+		Getting the equipment set up on the new machine took up a large portion of the time which was originally planned for conducting the experiments themselves.
+		
+		Considering the time which remained for conducting the experiments and collecting the data, I am happy with the sample size and quality of the results obtained.
+		% TODO: Talk about being happy with the amount of data you recieved, and how the results went against your original expectations for the results (which is a good thing!)
 
-	% Conclude about how you were happy with the overall product, but it could have been more in depth
+		If I had left more time for the experiments themselves, it could have been useful to conduct additional experiments with different participants, however the scenes could have been modified to use a different control scheme than the ones used originally.
+		This could have been beneficial, as the most frequent comment regarding negative impacts in immersion in both experiments was the movement controls.
+		% TODO: Room for further study
+
+
+	\section{Summary}
+
+		As a whole I am happy with the outcome of the project.
+		Overall it was well scoped for an initial endeavour into research in the subject area, giving possible areas for future expansion.
+		There are areas in which I feel could have been expanded upon in the project, such as experimenting with different uses of non-Euclidean geometry, or increased sample sizes for participants of the experiments.
+		The product itself, however, was executed well.
+		The functionality it provided covered all of the use cases required to conduct the experiments, and did so efficiently, given the use case.
+
+		% TODO: Reword, like, this entire section? It isn't that great.
