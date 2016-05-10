@@ -1,5 +1,12 @@
+% Hide chapter number
+\setcounter{secnumdepth}{-2}
+
 \chapter{Appendix}
 \label{appendix}
+
+% Reset chapter numbering so referencable objects in the section are labelled appropriately
+\setcounter{chapter}{8}
+\setcounter{secnumdepth}{2}
 
 % Give the appendix sections Alpha numbering
 \renewcommand\thesection{\Alph{section}}
@@ -15,20 +22,11 @@
 		\listoffigures						% Display the list of figures
 	\endgroup
 
-	\section{Questionnaire}
-		\label{appendix:question}
-		A blank copy of the form used to gather the feedback discussed in Chapter \ref{exp} can be seen in the following two pages. Either the 1 or 2 were highlighted under the 'Experiment' section at the top of each page before being given to a participant. This was used as a reference for myself as to which experiment the form was for, without indicating to the participant the nature of the experiment.
-
-		A digital transcription of the gathered data can be found in the \enquote{Raw Data} sheet in the \href{https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Resources/Feedback\%20Data.xlsx?raw=true}{\texttt{Report/Resources/Feedback Data.xlsx}} file inside the Git repository mentioned in \autoref{appendix:code}.
-		The completed physical versions of the forms containing the raw data gathered are available upon request.
-
-		\includepdf[pages={-},scale=1]{"Resources/Project Feedback Questionnaire"}
-
 	\section{Code Samples}
 	\label{appendix:code}
 
 		Below are code snippets for sections or complete functions that have specifically been referenced in the body of the report.
-		The full source code and project can be found at the GitHub Repository here:
+		The full source code and project can be found in the \enquote{Product} directory in the GitHub Repository found below:
 
 		\url{https://www.github.com/nboxhallburnett/IndividualProject}
 
@@ -99,6 +97,15 @@ Shader "NEGeo/Subtractive" {
 	}
 }
 		\end{lstlisting}
+
+	\section{Questionnaire}
+	\label{appendix:question}
+		A blank copy of the form used to gather the feedback discussed in Chapter \ref{exp} can be seen in the following two pages. Either the 1 or 2 were highlighted under the 'Experiment' section at the top of each page before being given to a participant. This was used as a reference for myself as to which experiment the form was for, without indicating to the participant the nature of the experiment.
+
+		A digital transcription of the gathered data can be found in the \enquote{Raw Data} sheet in the \href{https://github.com/nboxhallburnett/IndividualProject/blob/master/Report/Resources/Feedback\%20Data.xlsx?raw=true}{\texttt{Report/Resources/Feedback Data.xlsx}} file inside the Git repository mentioned in \autoref{appendix:code}.
+		The completed physical versions of the forms containing the raw data gathered are available upon request.
+
+		\includepdf[pages={-},scale=1]{"Resources/Project Feedback Questionnaire"}
 
 	\section{Ethics Review}
 	\label{appendix:ethics}
