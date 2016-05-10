@@ -82,6 +82,7 @@ namespace NEGeo {
                     _interruptDisable = true;
                 }
 
+                // Calculate the offset vector of the players camera from the perspective point
                 Vector3 offset = PointOfView.position - _player.position + ((_player.position - _player.parent.parent.position) / 2);
 
                 // Position and rotate the cameras depending on the type of illusion they are going for
