@@ -10,10 +10,11 @@
 
 		This chapter covers the development process that was undertaken for the creation of the product used for the experiments.
 
-	\section{Development Process}
-	\label{design:dev}
+	%\section{Development Process}
+	%\label{design:dev}
+	% TODO: This, if we get time
 
-		% THIS section will cover the development process of the product itself
+		% this section will cover the development process of the product itself
 
 		% Talk about development methodologies considered for use with the project, and how they were adapted for use for a single person.
 			% Use of Git and stuff like that
@@ -21,42 +22,77 @@
 		% Talk about how you decide to use an existing engine you knew well (save time reinventing the wheel for things like lighting, camera stuff, etc)
 		% Also you wanted to limit the amount of outside variables as possible, so an existing engine helped with that
 
-		% Talk about implementation process
-			% Started off using render textures, but that had problems regarding depth perception, outside of VR it was fine but inside it was obviously a plane
-			% Changed to using render culling and directly viewing the cameras with a bit more tranlation and rotation magics
-			% Challenge with multiple variations in how the areas can be set up - angles, inversions on both sides, whether one or both should render, whether you should be able to use it to transport, etc
 
-
-	\section{Product model}
+	\section[Implementation]{Product Implementation}
 	\label{design:model}
 
-		% THIS section will contain models of the various states and relations between the functions and other workings of the product, for areas such as the transition between non-Euclidean world areas.
-		\autoref{appendix:code:camera} \autoref{appendix:code:player}
+		To achieve the effect that a player is inside a non-Euclidean environment, a total of three primary pieces of functionality needed to be implemented:
+		\begin{enumerate}
+			\item A way to position a camera in a way to get the perspective of an area which would be seen by the player of the area which would give the impression of non-Euclidean space
+			\item A way to render the new perspective to be seen by the player, but only in desired areas
+			\item A way to transport the player between their current position and the new perspective without them realising they have gone anywhere other than they expected.
+		\end{enumerate}
 
-	\begin{figure}[H]
-		\includegraphics[width=0.8\textwidth]{Images/Position}
-		\centering
-		\caption{2D representation of the calculations for the position and rotation of cameras.
-			See \autoref{appendix:code:camera} for the implementation}
-		\label{design:fig:maths}
-	\end{figure}
+		To calculate the relative position for a camera to render a new perspective for the player, two pieces of information needed to be known: the plane where the player would be viewing the perspective from (hereby referenced as \enquote{from plane}), and a plane in the new area that the player would be viewing the perspective of (hereby referenced as \enquote{to plane}). Both planes can be seen referenced by the two \enquote{View Area} lines in \autoref{design:fig:maths}.
+		With the two relative points known, the next step is to work out the positioning and rotation that the camera will need to use for the new area.
+		The position of the camera could be worked out by calculating the distance vector between the player and the \enquote{from plane}, represented by \enquote{A} (Z axis) and \enquote{B} (X Axis) on \autoref{design:fig:maths}, with an unseen \enquote{C} which would represent the distance in the Y axis.
+		The position offset then needs to be reoriented by the difference in rotation between the \enquote{from plane} and \enquote{to plane}, before finally being translated relative to the position of the \enquote{to plane}.
+		This calculation can be seen in lines 90 or 93 in \autoref{appendix:code:camera}.
 
-	\begin{figure}[H]
-		\includegraphics[width=1\textwidth]{Images/Lines_Everywhere2}
-		\centering
-		\caption{Example view of a scene.
-			Red lines are connections between points,
-			yellow lines are connections visible to the player,
-			and green lines are the direction the connectors are facing}
-		\label{design:fig:scene}
-	\end{figure}
+		\begin{figure}[h]
+			\includegraphics[width=0.8\textwidth]{Images/Position}
+			\centering
+			\caption{Top-down 2D representation of the calculations for the position and rotation of cameras.
+				See \autoref{appendix:code:camera} for the implementation}
+			\label{design:fig:maths}
+		\end{figure}
 
-	\begin{figure}[H]
-		\includegraphics[width=1\textwidth]{Images/NE_View}
-		\centering
-		\caption{Example of view from inside the Non-Euclidean scene, displaying an area which is larger on the inside}
-		\label{design:fig:game}
-	\end{figure}
+		The next step was to calculate the rotation to use for the camera.
+		In order to find out the rotation that is needed for the camera, two calculations needed to be made.
+		The first is one which was done before, which is the difference in rotation between the \enquote{from plane} and the \enquote{to plane}.
+		The second is the difference in rotation between the player camera, and the normal of the \enquote{from plane} (Represented by \enquote{(X\degree, Y\degree, Z\degree)} in \autoref{design:fig:maths}).
+		With these two rotations known, the final rotation of the perspective camera can be calculated.
+		This calculation can be seen in lines 91 or 94 in \autoref{appendix:code:camera}.
+		% TODO: Talk about the problems with some portals needing their positions and rotations inverted!
+
+		One of the more challenging aspects for achieving the non-Euclidean effect in the scene was getting the new perspective camera to render appropriately in the scene itself.
+		The usual approach for rendering different views in Unity is to use their provided \enquote{Render Textures}, which allow you to render a camera to a texture, and use that as the texture of an object in the game world.
+		Although that method works well for regular games outside of VR for things like mirrors, it was not a valid solution for use in VR where the user can perceive depth in the virtual environment, due to the texture being rendered on a flat mesh.
+
+		To get around this issue, a custom shader was made (\autoref{appendix:code:shader}) which could be applied to an object which was acting as the area for where a user should see the new perspective.
+		This shader had three main features: it would write the position of the object to the Z buffer for the render queue to ensure nothing behind it would be rendered, it would write no data to the RGBA (colour) channels to ensure nothing would be visibly rendered in that position from the players perspective, and finally it would always be the last thing to be rendered in the scene (Other than UI elements) to ensure the area would always be clear.
+
+		\begin{figure}[h]
+			\includegraphics[width=0.66\textwidth]{Images/NE_View}
+			\centering
+			\caption{Example of view of the final effect inside the Non-Euclidean scene, displaying an area which appears larger than the container surrounding it}
+			\label{design:fig:game}
+		\end{figure}
+
+		With objects placed in the scene with the shader, it would allow the view from the new perspective cameras, which had their own render queues so the effect would not overwrite them, to be drawn in place of those objects.
+		When coupled with the correct positioning and rotations of the perspective camera, it gave the impression that the other perspective was directly in those areas, in full stereoscopic 3D (As seen in \autoref{design:fig:game}).
+		% TODO: properly proof read this section
+
+		With the illusion working properly visibly, the final step was to allow the user to navigate between the areas in a way that gives no indication to the user that they have been transported.
+		The calculations for the actual positioning of the player once being transported were similar to that of the perspective camera positioning, where it would calculate a position for the player, and a rotation for the camera, relative to the \enquote{to plane} and \enquote{from plane} (\autoref{appendix:code:player}).
+		The next calculation which needed to be done for the player positioning was to know when to transport the player.
+		To do this, a collision area was added to the \enquote{plane from} and \enquote{plane to} objects.
+		In the collision areas, instead of stopping the player from moving within them, they would be used to detect if the player has moved greater than half way through the area, and if so, they would be transported to the equivalent area in the connected plane (\autoref{appendix:code:player} line 142).
+		From here, the only additional calculation that needed to be made was to adjust the vector containing the players movement momentum, and adjust it to be relative to the rotation offset between the two planes.
+
+		As a way of assisting with the modelling of the scenes themselves, lines were drawn inside the scene views of the Unity editor which would symbolise the various aspects of the connected points (\autoref{design:fig:scene}).
+		In the figure, red lines indicate the locations of the \enquote{to plane} and \enquote{from plane} for the connections, green lines indicate the normals of the planes, and yellow lines indicate planes which are visible to the player at any given time.
+		Only planes which are currently visible by the player have their respective perspective cameras positioned and rendered.
+
+		\begin{figure}[H]
+			\includegraphics[width=0.85\textwidth]{Images/Lines_Everywhere2}
+			\centering
+			\caption{Example view of a scene in the Unity editor.}
+				%Red lines are connections between points,
+				%yellow lines are connections visible to the player,
+				%and green lines are the direction the connectors are facing}
+			\label{design:fig:scene}
+		\end{figure}
 
 	\section[Environment Design]{Design of experiment environments}
 	\label{design:design}
