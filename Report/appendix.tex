@@ -5,7 +5,8 @@
 \label{appendix}
 
 % Reset chapter numbering so referencable objects in the section are labelled appropriately
-\setcounter{chapter}{8}
+\setcounter{chapter}{2}
+\renewcommand{\thechapter}{\Alph{chapter}}
 \setcounter{secnumdepth}{2}
 
 % Give the appendix sections Alpha numbering
@@ -16,12 +17,13 @@
 		\section{List of Figures}
 		\label{appendix:figures}
 
-		Below are a list of the figures which are present in the document, along with their corresponding page number.
+		Below is a list of the figures which are present in the document, along with their corresponding page number.
 
 		\renewcommand{\chapter}[2]{}		% Change chapter behaviour to make it not force the list of figures onto the following page
 		\listoffigures						% Display the list of figures
 	\endgroup
 
+\newpage
 	\section{Code Samples}
 	\label{appendix:code}
 
@@ -98,6 +100,7 @@ Shader "NEGeo/Subtractive" {
 }
 		\end{lstlisting}
 
+\newpage
 	\section{Questionnaire}
 	\label{appendix:question}
 		A blank copy of the form used to gather the feedback discussed in Chapter \ref{exp} can be seen in the following two pages. Either the 1 or 2 were highlighted under the 'Experiment' section at the top of each page before being given to a participant. This was used as a reference for myself as to which experiment the form was for, without indicating to the participant the nature of the experiment.
@@ -107,6 +110,7 @@ Shader "NEGeo/Subtractive" {
 
 		\includepdf[pages={-},scale=1]{"Resources/Project Feedback Questionnaire"}
 
+\newpage
 	\section{Ethics Review}
 	\label{appendix:ethics}
 		A completed and signed copy of the Project Ethical Review Form can be found on the following two pages.
