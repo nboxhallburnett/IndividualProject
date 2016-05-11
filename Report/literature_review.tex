@@ -1,17 +1,142 @@
 \chapter{Literature Review}
 \label{lr}
 
-	% Intro Page
-	\input{lr_intro}
+	\section{Introduction}
+	\label{lr:intro}
 
-	% Requirements for Presence in Virtual Reality chapter
-	\input{lr_vr}
+		This review explores the existing literature that covers the various requirements for creating a VE that consumers would perceive as \enquote{realistic} in VR.
+		As well as this, it also covers how these requirements have been, and can be, adapted to work inside of a world which does not follow the restrictions of real world geometry, such as in non-Euclidean or Escheresque space.
+		Gaps in the current literature are outlined, alongside prospective areas for future research.
 
-	% Non-Standard Geometry chapter - Merged into lr_crossover
-	%\input{lr_ne-geo}
+		There are two main areas which make up the requirements for the aims of this study.
+		The first area is identifying the components which are required to achieve a sense of presence in a Virtual Environment (VE) when in VR, and how they influence a users feeling of immersion within it.
+		The second area covers research into the uses and effects of non-Euclidean geometry in virtual environments. % I did start adding something here, if you remember what it was then have at it
 
-	% Application of Virtual Reality in a Non-Euclidean world Chapter
-	\input{lr_crossover}
+		The following sections in this chapter cover both the aforementioned areas, as well as research into the tools and techniques which can be used to build the proposed system, and a conclusion which summarises the reviewed literature and its impacts on the proposed project.
 
-	% Conclusion
-	\input{lr_conclusion}
+	\section{Presence in Virtual Reality}
+	\label{lr:vr}
+
+		Presence is the term used in VR systems to describe a user's sense of existing inside a VE. Because of this it can be seen as one of, if not the most important feature of the design for a VR system, as well as a precursor for a user becoming fully immersed in the VE.
+
+		There are a few main features which are key to achieving a sense of presence in a VE. One example would be the general perception of the user for things such as depth perception, the ability for a person to calculate the distance of a point from themselves, and sensorimotor adaptation, which is the calibration of a user's senses to fit their environment.
+		As well as this, there are specified areas such as affordance detection, the ability for a person to calculate interaction with an object or environment, which helps assist a user with navigation and interaction in a VE.
+		The following sections will review existing literature on the aforementioned features.
+
+		\subsection{Affordances in VR}
+		\label{lr:vr:affordances}
+			Affordance is especially important to get right in VR, particularly in a video game environment, due to the world a user is in being designed to be interacted with.
+			Unlike what common sense would dictate, research on affordance in the real world may not be as applicable for when designing interactions in a virtual world as expected.
+			A study \cite{Regia-Corte2012} focusing on a person's perception for whether or not they could stand upright on an object at various angles in a virtual world found that, contrary to expected results, users would tend to be more cautious when judging their ability in a virtual environment (critical angle 21.98\degree) compared to an equivalent object in the real world (critical angle 30\degree), even with a lack of apparent risk.
+
+			This study covered the various requirements for the experiments well, however there were a few areas in which it could still be expanded upon.
+			These areas include comparing results from using a variety of VR systems to judge responses based on hardware response times, display resolutions, and refresh rates, as well as increases and decreases in model and texture quality (not just the texture itself as they did) for judging the surfaces of the objects.
+
+			Another way in which affordance directly affects a user's sense of presence in VR is the simulation of real locomotion for the user.
+			In a study \cite{Turchet2015} covering the ways in which a user's movement is recorded and displayed in a VE (including, but not limited to, individual foot tracking, arm, leg, and head tracking, movement speed tracking, etc.), results found that while an increase in the coverage of the input also increased the sense of presence for the user, it was more important to focus the areas based on their relevance to the scenario at hand.
+			As well as this, the study found that while the input tracking itself was important, to attain a greater sense of presence it was also required for the physical representation of the user to match their real physical selves as much as possible, such as gender, height, and weight.
+
+			This study, while extremely thorough in its coverage of the various possible elements required to generate a sense of presence, could have recorded and displayed its results in a more usable manner than it did.
+			Due to the way the experiments were conducted, the results do not indicate any sense of importance for each individual step in its contribution to the feeling of presence in the user.
+			Because of this, further research could be undertaken to create a weighted system designed around the experiments conducted, signifying its importance for specific VR systems, creating a more convenient set of data for future use.
+
+		\subsection{Perception in Virtual Environments}
+		\label{lr:vr:perception}
+			Perception is a key feature to get right in VR, as incorrect calibration for features such as head tracking and input response can have both unintended, and undesired side-effects. In studies \cite{Wright2006}  \cite{Wright2009} \cite{Wright2011} \cite{Wright2013} \cite{Wright2014} around the effects of perception augmentation and sensorimotor adaptations, results showed that tests around sensorimotor processes that made use of Virtual Reality systems could have both intended and unintended effects on the participants central nervous system, both in the short term and the long term.
+			As well as this, the effects of sensorimotor adaptations were shown to not only effect the user during the exposure of the VE, but in prolonged exposure (<5 minutes), the adaptations made during the exposure could last for >2 minutes after leaving the VE \cite{Wright2013}.
+
+			These studies thoroughly cover the short-term effects that a wide variety of virtual and physical stimulation has on perception in a VE, and present their findings in a concise and readable manner.
+			However, other than passing mentions about the possibilities of them existing, the studies did not cover or follow up on any longer-term effects that the exposure of the experiments has on participants.
+
+			In a separate study \cite{Akizuki2005}, the effects of visual and physical stimulation in VR on a participants postural control was also covered.
+			This study found that, unlike in Wright's experiments, the effects that delayed visual responses from a VR HMD relative to a participants physical movements did not have any prolonged effects on a participants sensorimotor control outside of the VE.
+
+			The varied results from Akizuki's study compared to Wright's could be attributed to the quality of the hardware used for the VR headsets, with Akizuki's experiments using hardware which is upwards of 9 years older than that of Wright's, the participants in the experiments may have had a higher sense of immersion in Wright's experiments, allowing a greater possibility for sensorimotor adaptation to the VE.
+
+		\subsection{Summary}
+		\label{lr:vr:conclusion}
+			Due to recent relevant technology being both of a high quality, and low enough cost to warrant consumer interest, as well as its applications in not just Video Games, but in Medicine, Psychology, and Education, Virtual Reality is a very highly researched area.
+
+			Studies have been conducted to cover an extremely wide range of applications and effects for VR, and because of this, there is a very solid foundation of work which can be both applied for practical uses, as well as a platform to build upon for future research.
+
+			This is especially true in the two main focus points for the literature covered in this section, and will be beneficial for reference during the creation of the proposed system.
+
+
+	\section{Non-Euclidean Geometry in Virtual Environments}
+	\label{lr:ne}
+
+		Attempts to find existing literature which covers the use or effects of non-Euclidean geometry in virtual environments, with or without the use of VR, concluded that there is a distinct lack of academic research surrounding the subject area.
+		Research does exist in the mathematics behind non-Euclidean geometry \cite{Maric2014} \cite{Turner2009}, however this is not applicable to this study as it surround the theoretical practices of the uses, and not related to practical applications for implementations in virtual environments.
+
+		The lack of research in the subject area could be due to the fact that research into the effects of VR is a relatively new subject area, so the more niche areas are less likely to have been studied at this point.
+		This does, however, open up a broad area for the research to be conducted by the proposed project, as well as opportunities for further research beyond it.
+
+	\section{Tools and Techniques}
+	\label{lr:tools}
+
+		% This section will cover tools which are applicable for the creation of VR/Non-Euclidean virtual environments.
+		% TODO: In this section I will be covering the various tools I could use to create the proposed system, these tools and techniques will include:
+		\begin{itemize}
+			\item Software
+			\begin{itemize}
+				\item Custom engine
+				\begin{itemize}
+					\item Oculus SDK 0.8
+					\item NVIDIA Gameworks VR
+					\item AMD LiquidVR
+					\item DirectX 11.2 / 12
+					\item OpenGL 4.5
+				\end{itemize}
+				\item Modify existing engine
+				\begin{itemize}
+					\item Unity 5
+					\item Unreal 4
+				\end{itemize}
+			\end{itemize}
+			\item Hardware
+			\begin{itemize}
+				\item Head-Mounted Display
+				\begin{itemize}
+					\item Oculus Rift DK2
+					\item HTC Vive
+				\end{itemize}
+				\item Input
+				\begin{itemize}
+					\item Keyboard/Mouse
+					\item Game controller (PS4, XBox One, etc.)
+					\item Web-cam/Kinect
+				\end{itemize}
+			\end{itemize}
+			\item Project Management
+			\begin{itemize}
+				\item Time Planning
+				\begin{itemize}
+					\item Agile
+					\item Waterfall
+				\end{itemize}
+				\item Source Control
+				\begin{itemize}
+					\item Git
+					\item SVN
+				\end{itemize}
+			\end{itemize}
+		\end{itemize}
+		Resources for reference:
+		\cite{Bruce2012} - Custom engine v modify an existing one - debate. Compares the pros and cons of both modifying an existing engine and creating a custom solution. ('Leaky Abstractions' with an existing engine, balance engine efficiency and actual system development with a custom engine, etc.).
+
+	\section{Conclusion}
+	\label{lr:conclusion}
+
+		In Virtual Reality, non-standard geometry is definitely an area with potential to engage, and possibly spark an interest within a user about the capabilities and uses of such concepts.
+
+		% TODO - Reword this?
+		This review has given an overview into the various components required for the creation of an environment suitable for use in VR, how non-standard geometrical worlds can be created for use in a VE, and how the areas both require adaptation in order to work together.
+
+		In terms of VR, existing literature is very thorough in its coverage of the possibilities and effects of its use both within and outside of video game environments.
+		Several key areas that should be considered when designing a virtual environment for VR were outlined such as affordance detection and potential sensorimotor adaptation, and how they can effect a users sense of presence and immersion.
+		Although there is definitely still room for further research into the more niche areas of study, there is a solid foundation for use as a reference for further development in the field.
+
+		For non-Euclidean geometry, however, there is a distinct lack of academic research into its use within virtual environments, with most studies focusing instead on the theoretical applications for it.
+		Reports around the use of non-standard geometry in video games does exist, however due to the non-scholarly nature of the sources, which are mainly video game journalist articles or developer interviews, they cannot be completely trusted for academic purposes.
+
+		Due to combination of the findings surrounding these areas, research into the use of non-Euclidean geometry within a VR system is very open to exploration, and as such, research would be beneficial as a possible basis for further study, perhaps even encouraging it.
