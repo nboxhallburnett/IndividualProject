@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}			% Change the encoding to allow for more character types
 \usepackage{booktabs}				% More professional looking table layouts
 \usepackage{csquotes}				% Easy quotation
+\usepackage{datetime}				% Date customization
 \usepackage{enumitem}				% Nicer itemizations
 \usepackage{etoolbox}				% Lets you do fancy stuff with section types
 \usepackage{fancyhdr}				% Fancy Headers
@@ -26,13 +27,16 @@
 \usepackage{color}					% Pretty Colours
 \usepackage{float}
 
+% Format the date so it only prints MM YYYY
+\newdateformat{mydate}{\monthname[\THEMONTH] \THEYEAR}
+
 % Set document specific info
 \title{Is Immersion Possible in Non-Euclidean Virtual Environments?}
-\subtitle{CHP2524 - Individual Project Report}
-\author{Nathan Boxhall-Burnett - u1254544}
+\subtitle{Final Year Project Report}
+\author{Nathan Boxhall-Burnett}
+\date{\mydate\today}
 \setlength{\columnsep}{1cm}			% Set the spacing between columns
 \onehalfspacing						% Set the spacing between the lines of text
-%\doublespacing
 \graphicspath{Images/}				% Set the default path to use for images
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
